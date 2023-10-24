@@ -9,40 +9,37 @@ import {
   Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import firestore from '@react-native-firebase/firestore';
 
-import styles from './styles';
-import ListTodo from './ListTodo';
+import styles from './TodoList.Styles';
+import TodosComponent from './Todos.Component';
+import {TodoListProps} from '../../Navigation/Navigation.Props';
+import {useAppDispatch, useAppSelector} from '../../Hooks/Redux.Hook';
+import {
+  addNewTodo,
+  deleteTodo,
+  getTodos,
+  updateTodo,
+} from '../../Store/Reducer/TodoSlice';
+import {getTodosService} from '../../Services/Todo.Sevices';
+import {ITodo} from '../../Types/Todos';
 
-type todoList = {
-  task: string;
-  completed: boolean;
-};
+const TodoList = ({navigation}: TodoListProps) => {
+  //   const navigation = useNavigation<TodoListProps>();
 
-const TodoApp = () => {
-  const [todoList, setTodos] = useState<todoList[] | any[]>([]);
+  const todos = useAppSelector(state => state.todo.todos);
+  const dispatch = useAppDispatch();
+
   const [textInput, setTextInput] = useState('');
 
-  const ref = firestore().collection('todos');
-
   useEffect(() => {
-    return ref.onSnapshot(querySnapshot => {
-      const list: any[] = [];
-      querySnapshot.docs.forEach(doc => {
-        const {task, completed} = doc.data();
-        list.push({
-          id: doc.id,
-          task,
-          completed,
-        });
-      });
-
-      setTodos(list);
-    });
+    const fetchData = async () => {
+      await getTodosService(data => dispatch(getTodos(data)));
+    };
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const addTodo = async () => {
+  const onClickAddTodo = async () => {
     if (textInput.length === 0) {
       Alert.alert('Error', 'Please input new task');
       return;
@@ -51,43 +48,47 @@ const TodoApp = () => {
         task: textInput,
         completed: false,
       };
-      await ref.add({...newTodo});
+      dispatch(addNewTodo(newTodo));
       setTextInput('');
     }
   };
 
   const markTodoComplete = async (todo: any) => {
-    await ref
-      .doc(todo.id)
-      .set({task: todo.task, completed: true}, {merge: true});
+    dispatch(
+      updateTodo({id: todo.id, task: todo.task, completed: !todo.completed}),
+    );
   };
 
-  const deleteTodo = async (todoId: any) => {
-    await ref.doc(todoId).delete();
+  const onClickDeleteTodo = async (todoId: any) => {
+    dispatch(deleteTodo({id: todoId}));
+  };
+
+  const editTodo = (todoData: ITodo) => {
+    navigation.navigate('TodoDetail', {...todoData});
   };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.header}>
         <Text
-          // eslint-disable-next-line react-native/no-inline-styles
           style={{
             fontWeight: 'bold',
             fontSize: 26,
-            color: '#79AC78',
+            color: '#2089dc',
           }}>
-          MY TODO
+          MY TODOS
         </Text>
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{padding: 20, paddingBottom: 100}}
-        data={todoList}
+        data={todos}
         renderItem={({item}) => (
-          <ListTodo
+          <TodosComponent
             todo={item}
             markTodoComplete={markTodoComplete}
-            deleteTodo={deleteTodo}
+            deleteTodo={onClickDeleteTodo}
+            editTodo={() => editTodo(item)}
           />
         )}
       />
@@ -101,7 +102,7 @@ const TodoApp = () => {
             style={{color: '#000', height: 50}}
           />
         </View>
-        <TouchableOpacity onPress={() => addTodo()}>
+        <TouchableOpacity onPress={() => onClickAddTodo()}>
           <View style={styles.iconPlusContainer}>
             <Icon name="add" size={30} />
           </View>
@@ -110,4 +111,4 @@ const TodoApp = () => {
     </SafeAreaView>
   );
 };
-export default TodoApp;
+export default TodoList;

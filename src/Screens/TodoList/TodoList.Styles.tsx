@@ -7,22 +7,20 @@ const styles = StyleSheet.create({
   },
 
   //BODY
-  listItem: {
-    padding: 10,
+  listItemContainer: {
     backgroundColor: '#f5f5f5',
-    flexDirection: 'row',
+    padding: 2,
+    paddingRight: 8,
+    paddingBottom: 10,
     borderRadius: 10,
     marginVertical: 10,
+    // flexDirection: 'row',
     alignItems: 'center',
   },
-  iconAction: {
-    height: 25,
-    width: 25,
-    backgroundColor: 'red',
-    justifyContent: 'center',
+  listItem: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 5,
-    borderRadius: 3,
+    flex: 1,
   },
 
   //FOOTER
@@ -39,7 +37,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 20,
     elevation: 40,
-    backgroundColor: '#c8dec8',
+    backgroundColor: '#d7eafa',
     flex: 1,
     marginVertical: 20,
     marginRight: 20,
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
   iconPlusContainer: {
     height: 50,
     width: 50,
-    backgroundColor: '#79AC78',
+    backgroundColor: '#2089dc',
     elevation: 40,
     borderRadius: 25,
     justifyContent: 'center',
