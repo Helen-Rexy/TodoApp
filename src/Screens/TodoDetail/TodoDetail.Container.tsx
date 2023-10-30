@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import {Button} from '@rneui/themed';
 
 import DetailComponent from './Detail.Component';
@@ -7,15 +7,21 @@ import styles from './TodoDetail.Styles';
 import {TodoDetailProps} from '../../Navigation/Navigation.Props';
 import {useAppDispatch} from '../../Hooks/Redux.Hook';
 import {deleteTodo, updateTodo} from '../../Store/Reducer/TodoSlice';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-const TodoDetailContainer = ({route, navigation}: TodoDetailProps) => {
+const TodoDetail = ({route, navigation}: TodoDetailProps) => {
   const [state, setState] = useState({...route.params});
 
   const dispatch = useAppDispatch();
 
   const onClickUpdateTodo = async () => {
     dispatch(
-      updateTodo({id: state.id, task: state.task, completed: state.completed}),
+      updateTodo({
+        id: state.id,
+        task: state.task,
+        completed: state.completed,
+        imageUrl: state.imageUrl,
+      }),
     );
     navigation.navigate('TodoList');
   };
@@ -28,31 +34,38 @@ const TodoDetailContainer = ({route, navigation}: TodoDetailProps) => {
     }
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            fontSize: 26,
-            color: '#2089dc',
-          }}>
-          EDIT TODO
-        </Text>
+    <SafeAreaView style={styles.container}>
+      <View style={{flex: 1}}>
+        <ScrollView scrollEnabled>
+          <View style={styles.header}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 26,
+                color: '#2089dc',
+              }}>
+              EDIT TODO
+            </Text>
+          </View>
+          <DetailComponent state={state} setState={setState} />
+        </ScrollView>
       </View>
-      <DetailComponent state={state} setState={setState} />
-      <View>
+      <View style={{flexDirection: 'column', gap: 5, backgroundColor: '#fff'}}>
         <Button onPress={() => onClickUpdateTodo()}>
           <Text style={{color: '#FFF', fontSize: 18}}>Update</Text>
         </Button>
         <Button
           type="outline"
-          style={{marginTop: 10}}
+          style={{
+            marginTop: 10,
+            backgroundColor: '#fff',
+          }}
           onPress={() => onClickDeleteTodo()}>
           <Text style={{color: 'red', fontSize: 18}}>Delete</Text>
         </Button>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
-export default TodoDetailContainer;
+export default TodoDetail;

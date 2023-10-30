@@ -1,3 +1,3 @@
-import TodoDetailContainer from './TodoDetail.Container';
+import TodoDetail from './TodoDetail.Container';
 
-export default TodoDetailContainer;
+export default TodoDetail;

@@ -24,8 +24,6 @@ import {getTodosService} from '../../Services/Todo.Sevices';
 import {ITodo} from '../../Types/Todos';
 
 const TodoList = ({navigation}: TodoListProps) => {
-  //   const navigation = useNavigation<TodoListProps>();
-
   const todos = useAppSelector(state => state.todo.todos);
   const dispatch = useAppDispatch();
 
@@ -47,6 +45,7 @@ const TodoList = ({navigation}: TodoListProps) => {
       const newTodo = {
         task: textInput,
         completed: false,
+        image: '',
       };
       dispatch(addNewTodo(newTodo));
       setTextInput('');
@@ -55,7 +54,12 @@ const TodoList = ({navigation}: TodoListProps) => {
 
   const markTodoComplete = async (todo: any) => {
     dispatch(
-      updateTodo({id: todo.id, task: todo.task, completed: !todo.completed}),
+      updateTodo({
+        id: todo.id,
+        task: todo.task,
+        completed: !todo.completed,
+        imageUrl: todo.imageUrl,
+      }),
     );
   };
 

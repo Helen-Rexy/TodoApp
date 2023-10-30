@@ -19,7 +19,7 @@ type initialStateType = {
 
 const initialState: initialStateType = {
   loading: false,
-  todos: [{id: 'afs', task: 'todo task 1', completed: false}],
+  todos: [{id: 'afs', task: 'todo task 1', completed: false, imageUrl: ''}],
 };
 
 export const todoSlice = createSlice({
@@ -38,9 +38,9 @@ export const todoSlice = createSlice({
 
     updateTodo: (state, action: PayloadAction<ITodo>) => {
       const {
-        payload: {id, task, completed},
+        payload: {id, task, completed, imageUrl},
       } = action;
-      updateTodoService({id, task, completed});
+      updateTodoService({id, task, completed, imageUrl});
     },
 
     deleteTodo: (state, action: PayloadAction<{id: string}>) => {

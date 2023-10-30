@@ -4,13 +4,14 @@ import {Input, Switch, Text} from '@rneui/themed';
 
 import styles from './TodoDetail.Styles';
 import {ITodo} from '../../Types/Todos';
+import TakePhoto from './TakePhoto';
 
 const DetailComponent = ({state, setState}: {state: ITodo; setState: any}) => {
-  const onChangeContentTask = text => {
-    setState(prev => ({...prev, task: text}));
+  const onChangeContentTask = (text: string) => {
+    setState((prev: any) => ({...prev, task: text}));
   };
-  const onMarkDone = value => {
-    setState(prev => ({...prev, completed: value}));
+  const onMarkDone = (value: boolean) => {
+    setState((prev: any) => ({...prev, completed: value}));
   };
   return (
     <View style={styles.bodyContainer}>
@@ -27,6 +28,7 @@ const DetailComponent = ({state, setState}: {state: ITodo; setState: any}) => {
         <Text style={{fontSize: 18}}>Completed</Text>
         <Switch value={state.completed} onValueChange={onMarkDone} />
       </View>
+      <TakePhoto state={state} setState={setState} />
     </View>
   );
 };

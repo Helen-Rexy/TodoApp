@@ -17,11 +17,12 @@ export const getTodosService = async (functionCallback: (data) => void) => {
       next: querySnapshot => {
         const list: any[] = [];
         querySnapshot.docs.forEach(doc => {
-          const {task, completed} = doc.data();
+          const {task, completed, imageUrl} = doc.data();
           list.push({
             id: doc.id,
             task,
             completed,
+            imageUrl,
           });
         });
         if (functionCallback) {
@@ -38,9 +39,14 @@ export const getTodosService = async (functionCallback: (data) => void) => {
   }
 };
 
-export const updateTodoService = async ({id, task, completed}) => {
+export const updateTodoService = async ({id, task, completed, imageUrl}) => {
   try {
-    await ref.doc(id).set({task: task, completed: completed}, {merge: true});
+    await ref
+      .doc(id)
+      .set(
+        {task: task, completed: completed, imageUrl: imageUrl},
+        {merge: true},
+      );
   } catch (error) {
     console.log(error);
   }
